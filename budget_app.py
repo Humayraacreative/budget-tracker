@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import gspread
-from datetime import datetime
+from datetime import datetime, date
 
 # --- 1. SECRETS NA GOOGLE SHEETS CONNECTION ---
 # Hii inatumia 'secrets' zilizopo kwenye Streamlit Cloud (sio faili la json moja kwa moja kwa usalama)
@@ -45,7 +45,7 @@ def save_data(worksheet, df):
         for item in row:
             # Ikiwa ni Tarehe (Timestamp au date object), tunageuza kuwa String (YYYY-MM-DD)
             # Hii inazuia TypeError
-            if isinstance(item, (pd.Timestamp, datetime.date)):
+            if isinstance(item, (pd.Timestamp, date)):
                 row_values.append(str(item))
             else:
                 row_values.append(item)
