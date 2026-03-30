@@ -29,14 +29,28 @@ def load_data(worksheet):
     return df
 
 # Fungsha ya kuhifadhi data (Inafuta yote ya kale na kuandika upya - Safi na rahisi)
+# Fungsha mpya ya kuhifadhi data (Inahifadhi Tarehe kama String ili isilete Error)
 def save_data(worksheet, df):
     worksheet.clear()
-    # Andika Vichwa (Headers)
-    worksheet.append_row(df.columns.tolist())
-    # Andika Rows zote
+    
+    # 1. Tunahifadhi Vichwa (Headers)
+    # Tunahakikisha vichwa vinakuwa maneno (strings)
+    headers = [str(col) for col in df.columns.tolist()]
+    worksheet.append_row(headers)
+    
+    # 2. Tunahifadhi Data (Rows)
     for index, row in df.iterrows():
-        worksheet.append_row(row.tolist())
-
+        # Tunabadilisha row kuwa list, lakini TUNAGEUZA TAREHE KUWA MANENO
+        row_values = []
+        for item in row:
+            # Ikiwa ni Tarehe (Timestamp au date object), tunageuza kuwa String (YYYY-MM-DD)
+            # Hii inazuia TypeError
+            if isinstance(item, (pd.Timestamp, datetime.date)):
+                row_values.append(str(item))
+            else:
+                row_values.append(item)
+        
+        worksheet.append_row(row_values)
 # --- 2. MWANZO WA PROGRAMU ---
 worksheet = get_connection()
 if worksheet:
